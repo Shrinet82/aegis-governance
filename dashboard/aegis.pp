@@ -43,6 +43,32 @@ dashboard "aegis_overview" {
       value = "< 60 seconds"
       width = 3
     }
+
+    card {
+      sql = <<-EOQ
+        select
+          count(*) as "Insecure S3 Buckets"
+        from
+          aws_s3_bucket
+        where
+          block_public_acls = false or block_public_policy = false;
+      EOQ
+      width = 3
+      type = "alert"
+    }
+
+    card {
+      sql = <<-EOQ
+        select
+          count(*) as "Insecure Storage Accounts"
+        from
+          azure_storage_account
+        where
+          enable_https_traffic_only = false;
+      EOQ
+      width = 3
+      type = "alert"
+    }
   }
 
   table {
