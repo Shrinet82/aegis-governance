@@ -5,7 +5,7 @@ policies:
     mode:
       type: azure-event-grid
       events:
-        - source: "Microsoft.Storage/storageAccounts"
+        - resourceProvider: "Microsoft.Storage/storageAccounts"
           event: "write"
     filters:
       - type: value
