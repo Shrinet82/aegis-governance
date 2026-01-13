@@ -1,5 +1,7 @@
 name: Test Cross-Cloud Auth
-on: push
+on:
+  push:
+  workflow_dispatch:
 
 permissions:
   id-token: write
