@@ -12,4 +12,4 @@ policies:
         value: false
     actions:
       - type: require-secure-transfer
-        enabled: true
+        value: true

@@ -1,0 +1,9 @@
+nohup: ignoring input
+[ Wait    ] Starting WorkspaceEvents Server
+[ Message ] WorkspaceEvents loaded
+[ Message ] Initialization complete
+[ Ready   ] Dashboard server started on 9033 and listening on local
+[ Message ] Visit http://localhost:9033
+[ Message ] Press Ctrl+C to exit
+[ Wait    ] WorkspaceEvents execution started: aegis_dashboard.dashboard.aegis_overview
+[ Ready   ] Execution complete: aegis_dashboard.dashboard.aegis_overview
