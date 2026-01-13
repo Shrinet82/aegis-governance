@@ -1,0 +1,34 @@
+policies:
+  - name: aws-ebs-mark-unattached
+    resource: aws.ebs
+    comment: "Mark unattached EBS volumes for deletion in 4 days"
+    filters:
+      - Attachments: []
+      - "tag:custodian_status": absent
+    actions:
+      - type: mark-for-op
+        tag: custodian_status
+        op: delete
+        days: 4
+
+  - name: aws-ebs-delete-marked
+    resource: aws.ebs
+    comment: "Delete EBS volumes marked for deletion"
+    filters:
+      - type: marked-for-op
+        tag: custodian_status
+        op: delete
+    actions:
+      - type: delete
+
+  - name: aws-eip-mark-unused
+    resource: aws.eip
+    comment: "Mark unassociated Elastic IPs for deletion in 4 days"
+    filters:
+      - AssociationId: null
+      - "tag:custodian_status": absent
+    actions:
+      - type: mark-for-op
+        tag: custodian_status
+        op: delete
+        days: 4

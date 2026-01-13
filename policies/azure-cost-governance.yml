@@ -1,0 +1,28 @@
+policies:
+  - name: azure-disk-mark-orphaned
+    resource: azure.disk
+    comment: "Mark orphaned Azure disks for deletion in 4 days"
+    filters:
+      - type: value
+        key: managedBy
+        value: null
+      - "tag:custodian_status": absent
+    actions:
+      - type: mark-for-op
+        tag: custodian_status
+        op: delete
+        days: 4
+
+  - name: azure-ip-mark-orphaned
+    resource: azure.publicip
+    comment: "Mark unassociated Public IPs for deletion in 4 days"
+    filters:
+      - type: value
+        key: properties.ipConfiguration
+        value: null
+      - "tag:custodian_status": absent
+    actions:
+      - type: mark-for-op
+        tag: custodian_status
+        op: delete
+        days: 4

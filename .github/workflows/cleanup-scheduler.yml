@@ -1,0 +1,45 @@
+name: Aegis Janitor Protocol
+on:
+  schedule:
+    - cron: "0 0 * * *" # Runs daily at midnight
+  workflow_dispatch: # Allows manual trigger for testing
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  run-aegis-aws:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: us-east-1
+
+      - name: Run AWS Janitor
+        run: |
+          pip install c7n
+          custodian run --output-dir=output/aws policies/aws-cost-governance.yml
+
+  run-aegis-azure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Run Azure Janitor
+        run: |
+          pip install c7n c7n_azure
+          custodian run --output-dir=output/azure policies/azure-cost-governance.yml
