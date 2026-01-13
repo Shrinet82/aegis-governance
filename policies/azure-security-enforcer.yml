@@ -7,6 +7,9 @@ policies:
       events:
         - resourceProvider: "Microsoft.Storage/storageAccounts"
           event: "write"
+      provision-options:
+        identity:
+          type: SystemAssigned
     filters:
       - type: value
         key: properties.supportsHttpsTrafficOnly
