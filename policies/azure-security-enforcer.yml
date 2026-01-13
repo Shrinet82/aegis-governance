@@ -1,15 +1,15 @@
 policies:
-  - name: azure-storage-disable-public-access
+  - name: azure-storage-enforce-secure-transfer
     resource: azure.storage
-    description: "Disables anonymous public access on new storage accounts."
+    description: "Enforces secure transfer (HTTPS) on new storage accounts."
     mode:
       type: azure-event-grid
       events:
         - resourceWrite
     filters:
       - type: value
-        key: properties.allowBlobPublicAccess
-        value: true
+        key: properties.supportsHttpsTrafficOnly
+        value: false
     actions:
-      - type: set-public-access
-        enabled: false
+      - type: require-secure-transfer
+        enabled: true
