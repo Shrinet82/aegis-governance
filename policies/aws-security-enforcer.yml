@@ -1,0 +1,32 @@
+policies:
+  - name: aws-s3-block-public-access-realtime
+    resource: aws.s3
+    description: "Instantly blocks public access on any newly created S3 bucket."
+    mode:
+      type: cloudtrail
+      events:
+        - CreateBucket
+      role: arn:aws:iam::391183495225:role/Aegis-Governance-Role
+    actions:
+      - type: set-public-block
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  - name: aws-sg-kill-ssh-rdp-world
+    resource: aws.security-group
+    description: "Removes any rule allowing SSH (22) or RDP (3389) from 0.0.0.0/0."
+    mode:
+      type: cloudtrail
+      events:
+        - AuthorizeSecurityGroupIngress
+      role: arn:aws:iam::391183495225:role/Aegis-Governance-Role
+    filters:
+      - or:
+          - type: ingress
+            Cidr: "0.0.0.0/0"
+            Ports: [22, 3389]
+    actions:
+      - type: remove-permissions
+        ingress: matched

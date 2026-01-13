@@ -1,0 +1,15 @@
+policies:
+  - name: azure-storage-disable-public-access
+    resource: azure.storage
+    description: "Disables anonymous public access on new storage accounts."
+    mode:
+      type: azure-event-grid
+      events:
+        - resourceWrite
+    filters:
+      - type: value
+        key: properties.allowBlobPublicAccess
+        value: true
+    actions:
+      - type: set-public-access
+        enabled: false
