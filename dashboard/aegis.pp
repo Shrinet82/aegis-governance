@@ -131,7 +131,7 @@ dashboard "aegis_overview" {
         aws_cloudwatch_log_event
       where
         log_group_name = '/aws/lambda/custodian-aws-sg-remediate-marked'
-        and message like '%invoking action:remove-permissions%'
+        and message like '%action:removepermissions%'
       order by
         timestamp desc
       limit 10;
