@@ -120,19 +120,20 @@ dashboard "aegis_overview" {
   }
 
   table {
-    title = "Recent Kills (Remediation Log)"
+    title = "Recent Kills (Real-time Log)"
     sql = <<-EOQ
       select
-        event_time as "Time",
-        event_name as "Action",
-        resources->0->>'ResourceName' as "Target ID",
-        'Neutralized' as "Status"
+        timestamp as "Time",
+        'Revoke Security Group Rules' as "Action",
+        'Neutralized' as "Status",
+        message as "Log Message"
       from
-        aws_cloudtrail_lookup_event
+        aws_cloudwatch_log_event
       where
-        event_name = 'RevokeSecurityGroupIngress'
+        log_group_name = '/aws/lambda/custodian-aws-sg-remediate-marked'
+        and message like '%invoking action:remove-permissions%'
       order by
-        event_time desc
+        timestamp desc
       limit 10;
     EOQ
   }

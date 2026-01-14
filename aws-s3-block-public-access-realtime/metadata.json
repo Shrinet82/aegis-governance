@@ -1,0 +1,90 @@
+{
+  "policy": {
+    "name": "aws-s3-block-public-access-realtime",
+    "resource": "aws.s3",
+    "description": "Instantly blocks public access on any newly created S3 bucket.",
+    "mode": {
+      "type": "cloudtrail",
+      "events": [
+        "CreateBucket"
+      ],
+      "role": "arn:aws:iam::391183495225:role/Aegis-Governance-Role",
+      "tags": {
+        "custodian-info": "mode=cloudtrail:version=0.9.48"
+      }
+    },
+    "actions": [
+      {
+        "type": "set-public-block",
+        "BlockPublicAcls": true,
+        "BlockPublicPolicy": true,
+        "IgnorePublicAcls": true,
+        "RestrictPublicBuckets": true
+      }
+    ]
+  },
+  "version": "0.9.48",
+  "execution": {
+    "id": "87ac7a09-0c9e-45ca-b4f1-17fbaac804b3",
+    "start": 1768418847.0347328,
+    "end_time": 1768418862.8454967,
+    "duration": 15.810763835906982
+  },
+  "config": {
+    "region": "us-east-1",
+    "regions": [
+      "us-east-1"
+    ],
+    "cache": "~/.cache/cloud-custodian.cache",
+    "profile": null,
+    "account_id": "391183495225",
+    "assume_role": null,
+    "session_policy": null,
+    "external_id": null,
+    "log_group": null,
+    "tracer": null,
+    "metrics_enabled": null,
+    "metrics": null,
+    "output_dir": ".",
+    "cache_period": 15,
+    "dryrun": false,
+    "authorization_file": null,
+    "subparser": "run",
+    "config": null,
+    "configs": [
+      "policies/aws-security-enforcer.yml"
+    ],
+    "policy_filters": [],
+    "resource_types": [],
+    "verbose": null,
+    "quiet": null,
+    "debug": false,
+    "skip_validation": false,
+    "command": "c7n.commands.run",
+    "vars": null
+  },
+  "sys-stats": {
+    "snapshot_time": 15.811283111572266,
+    "num_fds": 2,
+    "cpu_user": 0.5999999999999999,
+    "cpu_system": 0.12,
+    "num_ctx_switches_voluntary": 222,
+    "num_ctx_switches_involuntary": 41,
+    "read_count": 734,
+    "write_count": 518,
+    "write_bytes": 696320,
+    "read_bytes": 3362816,
+    "rss": 25165824,
+    "vms": 25407488,
+    "data": 25407488
+  },
+  "api-stats": {
+    "lambda.GetFunction": 1,
+    "lambda.UpdateFunctionCode": 1,
+    "lambda.GetFunctionConfiguration": 2,
+    "events.DescribeRule": 1,
+    "lambda.AddPermission": 1,
+    "events.ListTargetsByRule": 1
+  },
+  "metrics": []
+}

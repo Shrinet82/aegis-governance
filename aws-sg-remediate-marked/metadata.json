@@ -1,0 +1,109 @@
+{
+  "policy": {
+    "name": "aws-sg-remediate-marked",
+    "resource": "aws.security-group",
+    "description": "Removes insecure rules from marked Security Groups after the grace period.",
+    "mode": {
+      "type": "periodic",
+      "schedule": "rate(1 minute)",
+      "role": "arn:aws:iam::391183495225:role/Aegis-Governance-Role",
+      "tags": {
+        "custodian-info": "mode=periodic:version=0.9.48"
+      }
+    },
+    "filters": [
+      {
+        "type": "marked-for-op",
+        "op": "remove-permissions",
+        "tag": "custodian_cleanup"
+      },
+      {
+        "or": [
+          {
+            "type": "ingress",
+            "Cidr": "0.0.0.0/0",
+            "Ports": [
+              22,
+              3389
+            ]
+          }
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "type": "remove-permissions",
+        "ingress": "matched"
+      },
+      {
+        "type": "remove-tag",
+        "tags": [
+          "custodian_cleanup"
+        ]
+      }
+    ]
+  },
+  "version": "0.9.48",
+  "execution": {
+    "id": "dc5f9b0a-6ce7-4db0-83ca-e74740279dcf",
+    "start": 1768418876.5786066,
+    "end_time": 1768418890.7994497,
+    "duration": 14.220843076705933
+  },
+  "config": {
+    "region": "us-east-1",
+    "regions": [
+      "us-east-1"
+    ],
+    "cache": "~/.cache/cloud-custodian.cache",
+    "profile": null,
+    "account_id": "391183495225",
+    "assume_role": null,
+    "session_policy": null,
+    "external_id": null,
+    "log_group": null,
+    "tracer": null,
+    "metrics_enabled": null,
+    "metrics": null,
+    "output_dir": ".",
+    "cache_period": 15,
+    "dryrun": false,
+    "authorization_file": null,
+    "subparser": "run",
+    "config": null,
+    "configs": [
+      "policies/aws-security-enforcer.yml"
+    ],
+    "policy_filters": [],
+    "resource_types": [],
+    "verbose": null,
+    "quiet": null,
+    "debug": false,
+    "skip_validation": false,
+    "command": "c7n.commands.run",
+    "vars": null
+  },
+  "sys-stats": {
+    "snapshot_time": 14.22105860710144,
+    "num_fds": 2,
+    "cpu_user": 0.6099999999999999,
+    "cpu_system": 0.06,
+    "num_ctx_switches_voluntary": 33,
+    "num_ctx_switches_involuntary": 1,
+    "read_count": 735,
+    "write_count": 517,
+    "write_bytes": 692224,
+    "rss": -229376,
+    "vms": -339968,
+    "data": -339968
+  },
+  "api-stats": {
+    "lambda.GetFunction": 1,
+    "lambda.UpdateFunctionCode": 1,
+    "lambda.GetFunctionConfiguration": 2,
+    "events.DescribeRule": 1,
+    "lambda.AddPermission": 1,
+    "events.ListTargetsByRule": 1
+  },
+  "metrics": []
+}

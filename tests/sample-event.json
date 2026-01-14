@@ -5,13 +5,13 @@
     "eventName": "AuthorizeSecurityGroupIngress",
     "awsRegion": "us-east-1",
     "requestParameters": {
-      "groupId": "sg-0ec9fcb486392c688"
+      "groupId": "sg-0345c17abf331dde6"
     },
     "responseElements": {
       "securityGroupRuleSet": {
         "items": [
           {
-            "groupId": "sg-0ec9fcb486392c688"
+            "groupId": "sg-0345c17abf331dde6"
           }
         ]
       }
