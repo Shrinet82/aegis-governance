@@ -1,0 +1,10 @@
+policies:
+  - name: aws-cleanup-ssh-world
+    resource: aws.security-group
+    filters:
+      - type: ingress
+        Cidr: "0.0.0.0/0"
+        Ports: [22]
+    actions:
+      - type: remove-permissions
+        ingress: matched

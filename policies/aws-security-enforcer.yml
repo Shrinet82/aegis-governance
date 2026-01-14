@@ -14,15 +14,15 @@ policies:
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
 
-  - name: aws-sg-kill-ssh-rdp-world
+  - name: aws-sg-mark-insecure
     resource: aws.security-group
-    description: "Removes any rule allowing SSH (22) or RDP (3389) from 0.0.0.0/0."
+    description: "Marks any Security Group allowing SSH (22) or RDP (3389) from 0.0.0.0/0 for remediation in 5 minutes."
     mode:
       type: cloudtrail
       events:
         - source: ec2.amazonaws.com
           event: AuthorizeSecurityGroupIngress
-          ids: "requestParameters.groupId"
+          ids: "responseElements.securityGroupRuleSet.items[].groupId"
       role: arn:aws:iam::391183495225:role/Aegis-Governance-Role
     filters:
       - or:
@@ -30,5 +30,29 @@ policies:
             Cidr: "0.0.0.0/0"
             Ports: [22, 3389]
     actions:
+      - type: mark-for-op
+        op: remove-permissions
+        tag: custodian_cleanup
+        hours: 0.08 # ~5 Minutes
+
+  - name: aws-sg-remediate-marked
+    resource: aws.security-group
+    description: "Removes insecure rules from marked Security Groups after the grace period."
+    mode:
+      type: periodic
+      schedule: "rate(1 minute)"
+      role: arn:aws:iam::391183495225:role/Aegis-Governance-Role
+    filters:
+      - type: marked-for-op
+        op: remove-permissions
+        tag: custodian_cleanup
+      # Re-verify the violation still exists before shooting
+      - or:
+          - type: ingress
+            Cidr: "0.0.0.0/0"
+            Ports: [22, 3389]
+    actions:
       - type: remove-permissions
         ingress: matched
+      - type: remove-tag
+        tags: ["custodian_cleanup"]

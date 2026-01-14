@@ -1,5 +1,6 @@
 dashboard "aegis_overview" {
   title = "Aegis: The Autonomous Cloud Immune System"
+  refresh = 5
 
   text {
     value = "Real-time cost optimization and security enforcement for AWS & Azure."
@@ -69,6 +70,21 @@ dashboard "aegis_overview" {
       width = 3
       type = "alert"
     }
+
+    card {
+      sql = <<-EOQ
+        select
+          count(*) as "Insecure SG Rules"
+        from
+          aws_vpc_security_group_rule
+        where
+          is_egress = false
+          and cidr_ipv4 = '0.0.0.0/0'
+          and (from_port = 22 or from_port = 3389);
+      EOQ
+      width = 3
+      type = "alert"
+    }
   }
 
   table {
@@ -85,6 +101,39 @@ dashboard "aegis_overview" {
         tags->>'custodian_status' is not null
       order by
         create_time desc;
+    EOQ
+  }
+
+  table {
+    title = "Pending Kills (Grace Period - 5m)"
+    sql = <<-EOQ
+      select
+        group_id as "Security Group ID",
+        group_name as "Name",
+        tags->>'custodian_cleanup' as "Deadline",
+        'Insecure Ingress (SSH/RDP)' as "Violation"
+      from
+        aws_vpc_security_group
+      where
+        tags->>'custodian_cleanup' is not null;
+    EOQ
+  }
+
+  table {
+    title = "Recent Kills (Remediation Log)"
+    sql = <<-EOQ
+      select
+        event_time as "Time",
+        event_name as "Action",
+        resources->0->>'ResourceName' as "Target ID",
+        'Neutralized' as "Status"
+      from
+        aws_cloudtrail_lookup_event
+      where
+        event_name = 'RevokeSecurityGroupIngress'
+      order by
+        event_time desc
+      limit 10;
     EOQ
   }
 }
