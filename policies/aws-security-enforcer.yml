@@ -33,7 +33,7 @@ policies:
       - type: mark-for-op
         op: remove-permissions
         tag: custodian_cleanup
-        hours: 0.08 # ~5 Minutes
+        hours: 0.034 # ~2 Minutes
 
   - name: aws-sg-remediate-marked
     resource: aws.security-group
