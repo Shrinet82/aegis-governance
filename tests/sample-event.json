@@ -1,0 +1,20 @@
+{
+  "detail": {
+    "eventVersion": "1.08",
+    "eventSource": "ec2.amazonaws.com",
+    "eventName": "AuthorizeSecurityGroupIngress",
+    "awsRegion": "us-east-1",
+    "requestParameters": {
+      "groupId": "sg-0ec9fcb486392c688"
+    },
+    "responseElements": {
+      "securityGroupRuleSet": {
+        "items": [
+          {
+            "groupId": "sg-0ec9fcb486392c688"
+          }
+        ]
+      }
+    }
+  }
+}
