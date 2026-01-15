@@ -1,6 +1,6 @@
 dashboard "aegis_overview" {
   title = "Aegis: The Autonomous Cloud Immune System"
-  refresh = 5
+
 
   text {
     value = "Real-time cost optimization and security enforcement for AWS & Azure."
@@ -132,6 +132,7 @@ dashboard "aegis_overview" {
       where
         log_group_name = '/aws/lambda/custodian-aws-sg-remediate-marked'
         and message like '%action:removepermissions%'
+        and timestamp > now() - interval '1 hour'
       order by
         timestamp desc
       limit 10;
